@@ -7,13 +7,15 @@
         <table aria-label="Customer accounts">
             <thead><tr><th scope="col">Full Name</th><th scope="col">Email</th><th scope="col">Phone</th></tr></thead>
             <tbody>
-                @foreach ($customers as $customer)
+                @forelse ($customers as $customer)
                     <tr>
-                        <td>{{ $customer['full_name'] }}</td>
-                        <td>{{ $customer['email'] }}</td>
-                        <td>{{ $customer['phone'] }}</td>
+                        <td>{{ $customer->full_name }}</td>
+                        <td>{{ $customer->email }}</td>
+                        <td>{{ $customer->phone }}</td>
                     </tr>
-                @endforeach
+                @empty
+                    <tr><td colspan="3">No customers found.</td></tr>
+                @endforelse
             </tbody>
         </table>
     </div>

@@ -8,24 +8,17 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('customer_accounts', function (Blueprint $table) {
+        Schema::create('customers', function (Blueprint $table) {
             $table->id();
             $table->string('full_name');
             $table->string('email')->unique();
             $table->string('phone', 30);
-        });
-
-        Schema::create('staff_accounts', function (Blueprint $table) {
-            $table->id();
-            $table->string('username')->unique();
-            $table->string('full_name');
-            $table->string('role');
+            $table->timestamps();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('staff_accounts');
-        Schema::dropIfExists('customer_accounts');
+        Schema::dropIfExists('customers');
     }
 };
