@@ -1,0 +1,72 @@
+[
+  {
+    "file": "task-1-customer-validation.png",
+    "description": "Invalid email rejected; entered name and phone retained.",
+    "url": "http://127.0.0.1:8000/customers/create"
+  },
+  {
+    "file": "task-1-customer-created.png",
+    "description": "Valid customer inserted and displayed on the listing.",
+    "url": "http://127.0.0.1:8000/customers"
+  },
+  {
+    "file": "task-2-user-validation.png",
+    "description": "Duplicate username and missing full name rejected; username retained.",
+    "url": "http://127.0.0.1:8000/users/create"
+  },
+  {
+    "file": "task-2-user-created.png",
+    "description": "New unique staff account inserted.",
+    "url": "http://127.0.0.1:8000/users"
+  },
+  {
+    "file": "task-3-customer-edit-prefilled.png",
+    "description": "Customer edit form pre-filled from the database.",
+    "url": "http://127.0.0.1:8000/customers/6/edit"
+  },
+  {
+    "file": "task-3-customer-updated.png",
+    "description": "Changed customer name and phone saved and displayed.",
+    "url": "http://127.0.0.1:8000/customers"
+  },
+  {
+    "file": "task-3-user-edit-prefilled.png",
+    "description": "User edit form pre-filled with existing name, username and role.",
+    "url": "http://127.0.0.1:8000/users/6/edit"
+  },
+  {
+    "file": "task-3-user-updated.png",
+    "description": "User name and role updated while retaining the same username.",
+    "url": "http://127.0.0.1:8000/users"
+  },
+  {
+    "file": "task-4-invalid-image-rejected.png",
+    "description": "A text file is rejected by server image validation.",
+    "url": "http://127.0.0.1:8000/users/6/edit"
+  },
+  {
+    "file": "task-4-oversized-image-rejected.png",
+    "description": "An image larger than 2 MB is rejected.",
+    "url": "http://127.0.0.1:8000/users/6/edit"
+  },
+  {
+    "file": "task-4-avatar-selected.png",
+    "description": "900 by 600 source image selected in the multipart edit form.",
+    "url": "http://127.0.0.1:8000/users/6/edit"
+  },
+  {
+    "file": "task-4-avatar-prepared.png",
+    "description": "Uploaded image stored and served as an actual 256 by 256 JPEG thumbnail.",
+    "url": "http://127.0.0.1:8000/users/6/edit"
+  },
+  {
+    "file": "task-5-user-avatars-and-placeholders.png",
+    "description": "Listing shows the prepared uploaded avatar and placeholders for users without uploads.",
+    "url": "http://127.0.0.1:8000/users"
+  },
+  {
+    "file": "mobile-user-edit.png",
+    "description": "Responsive edit form at a mobile viewport.",
+    "url": "http://127.0.0.1:8000/users/6/edit"
+  }
+]

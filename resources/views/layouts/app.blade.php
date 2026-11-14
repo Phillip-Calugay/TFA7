@@ -12,11 +12,12 @@
         <nav aria-label="Main navigation">
             <a href="{{ route('home') }}" @if(request()->routeIs('home')) aria-current="page" @endif>Home</a>
             <a href="{{ route('about') }}" @if(request()->routeIs('about')) aria-current="page" @endif>About</a>
-            <a href="{{ route('customers') }}" @if(request()->routeIs('customers')) aria-current="page" @endif>Customers</a>
-            <a href="{{ route('users') }}" @if(request()->routeIs('users')) aria-current="page" @endif>Users</a>
+            <a href="{{ route('customers') }}" @if(request()->routeIs('customers*')) aria-current="page" @endif>Customers</a>
+            <a href="{{ route('users') }}" @if(request()->routeIs('users*')) aria-current="page" @endif>Users</a>
         </nav>
     </header>
     <main>
+        @if(session('status')) <div class="status" role="status">{{ session('status') }}</div> @endif
         @yield('content')
     </main>
 </body>

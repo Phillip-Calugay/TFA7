@@ -1,95 +1,94 @@
-# Simple POS System - Laravel TFA6
+# Simple POS System — Laravel TFA7
 
-Phillip E. Calugay - IT0049 - TC31
+Phillip E. Calugay · IT0049 · TC31
 
-TFA6 replaces the TFA5 controller arrays with a real database, Laravel migrations, repeatable seed data, and Customer/User Eloquent models. The four pages retain the original layout and sample records.
+TFA7 extends the TFA6 database-backed POS with customer and user creation, validated edit forms, and prepared profile pictures. Home, About, Customers and Users remain available.
 
-## Requirements and first-time setup
+Repository: https://github.com/Phillip-Calugay/TFA7
 
-PHP 8.2+ with PDO SQLite enabled and Composer. This project uses Laravel 12, as locked in composer.lock. No Node.js build is needed; CSS is in public/css/pos.css.
+Local application: **http://127.0.0.1:8000**. Local hosting only was requested for this submission. This address works on the machine running PHP; it is not a public hosted URL.
 
-Run these commands in Windows Command Prompt for a fresh checkout:
+## Setup and run
+
+Requirements: PHP 8.2+, Composer, PDO SQLite, Fileinfo, Mbstring, Exif and GD. Laravel 12 and Intervention Image 3 are pinned in `composer.lock`. No Node.js build is needed; CSS is in `public/css/pos.css`.
+
+For XAMPP, enable `extension=gd` in the active `php.ini` (check `php --ini`) if it is disabled. The included `start-local.bat` loads GD for its own server process. PHP's `upload_max_filesize` and `post_max_size` should exceed 2 MB; the batch file sets them to 4 MB and 8 MB so Laravel can show its 2 MB validation message.
+
+From a fresh checkout in Windows Command Prompt:
 
 ```bat
-cd /d C:\xampp\htdocs\TSA6
+cd /d C:\xampp\htdocs\TFA7
 composer install
 copy .env.example .env
 php artisan key:generate
 php -r "file_exists('database/database.sqlite') || touch('database/database.sqlite');"
 php artisan migrate --seed
-php artisan serve
+php artisan storage:link
+start-local.bat
 ```
 
-Open http://127.0.0.1:8000. SQLite is the default database in .env.example. The local working copy is already configured and seeded; do not overwrite its .env to start the app.
+Open http://127.0.0.1:8000. Keep the terminal open; Ctrl+C stops the server. If port 8000 is already in use by this project, open that address directly. PHP must be on PATH; XAMPP's PHP executable is `C:\xampp\php\php.exe`.
 
-## Start the existing local project
+For this existing working copy, the database is already migrated and seeded. Run only `start-local.bat`; do not overwrite `.env` or reset the database. Uploaded pictures go to `storage/app/public/avatars`, and `public/storage` links to that public disk. On Windows, creating the link may require an elevated terminal or Developer Mode.
+
+If GD is not enabled globally, install dependencies using:
 
 ```bat
-cd /d C:\xampp\htdocs\TSA6
-php artisan serve
+php -d extension=gd C:\ProgramData\ComposerSetup\bin\composer.phar install
 ```
 
-If php is not recognized, use C:\xampp\php\php.exe artisan serve. Keep Command Prompt open; Ctrl+C stops the server. With XAMPP Apache running, http://localhost/TSA6/ is also supported.
+With GD enabled globally, `php artisan serve` also works. For XAMPP Apache, http://localhost/TFA7/ is supported by the root `.htaccess`; enable GD in Apache's PHP configuration and restart Apache after changing it. Set `APP_URL=http://localhost/TFA7` in `.env` and run `php artisan config:clear` when using that address so public disk avatar URLs match it.
 
-## Assignment implementation and file locations
+## Numbered assignment tasks and screenshots
 
-| Requirement | Location |
+All images are real browser captures of the local application. The [complete screenshot walkthrough](docs/SCREENSHOTS.md) contains 14 images covering all five tasks and a mobile view. [Capture metadata](docs/screenshots/manifest.json) records each route and result.
+
+| Task | Implementation | Evidence |
+| --- | --- | --- |
+| 1. Create Customer | `/customers/create`; required full name, valid required email, unique email matching the existing database constraint, optional phone. Errors and `old()` values on failure. | [Validation](docs/screenshots/task-1-customer-validation.png), [created record](docs/screenshots/task-1-customer-created.png) |
+| 2. Create User | `/users/create`; required unique username and full name, validated role selection. | [Validation](docs/screenshots/task-2-user-validation.png), [created record](docs/screenshots/task-2-user-created.png) |
+| 3. Edit both account types | `/customers/{customer}/edit` and `/users/{user}/edit`; pre-filled fields and PUT updates. Unchanged unique values remain valid. | [Customer form](docs/screenshots/task-3-customer-edit-prefilled.png), [customer saved](docs/screenshots/task-3-customer-updated.png), [user form](docs/screenshots/task-3-user-edit-prefilled.png), [user saved](docs/screenshots/task-3-user-updated.png) |
+| 4. Upload and prepare avatar | Nullable `users.avatar` migration; multipart user edit form; image/type validation; maximum 2048 KB and 6000×6000 pixels; Intervention Image GD crop to 256×256 JPEG; UUID filename; `Storage::disk('public')->put()`; only relative path saved. | [Invalid file](docs/screenshots/task-4-invalid-image-rejected.png), [size limit](docs/screenshots/task-4-oversized-image-rejected.png), [file selected](docs/screenshots/task-4-avatar-selected.png), [prepared avatar](docs/screenshots/task-4-avatar-prepared.png) |
+| 5. Display avatars | `/users` displays prepared pictures and a local SVG placeholder for records without avatars. | [Avatars and placeholders](docs/screenshots/task-5-user-avatars-and-placeholders.png) |
+
+![Task 5: user listing with a prepared avatar and placeholders](docs/screenshots/task-5-user-avatars-and-placeholders.png)
+
+Existing avatars are retained when no new file is supplied. Invalid uploads do not update other account fields. A successful replacement removes the previous file after the database update; a failed database save removes the new file. CSRF tokens, model binding, uniqueness checks ignoring only the bound record, field limits, escaped Blade output and accessible error messages are included. File inputs must be selected again after validation errors because browsers do not retain them.
+
+Intervention Image is the image package selected for this implementation; the assignment does not identify a specific instructor-approved package. Its dependency is locked for reproducible installation.
+
+## Project organization and database submission
+
+| Area | Files |
 | --- | --- |
-| customers table: id, full_name, email, phone, timestamps | database/migrations/2026_10_20_000000_create_pos_account_tables.php |
-| users table: unique username, full_name, role, timestamps | database/migrations/0001_01_01_000000_create_users_table.php and 2026_10_30_000000_adapt_users_for_pos.php |
-| At least five records per table | database/seeders/PosAccountSeeder.php |
-| Seeder entry point | database/seeders/DatabaseSeeder.php |
-| Eloquent models and fillable fields | app/Models/Customer.php and app/Models/User.php |
-| Eloquent queries ordered by ID | app/Http/Controllers/CustomerController.php and UserController.php |
-| Customer/user tables and escaped output | resources/views/customers/index.blade.php and resources/views/users/index.blade.php |
-| Home/About and shared navigation | resources/views/pages/ and resources/views/layouts/app.blade.php |
-| Page routes | routes/web.php |
-| Local database file (excluded from Git) | database/database.sqlite |
-| Example database settings | .env.example |
-| Database and page tests | tests/Feature/PosPagesTest.php and PosAccountSeederTest.php |
+| Controllers | `app/Http/Controllers/CustomerController.php`, `UserController.php` |
+| Eloquent models | `app/Models/Customer.php`, `User.php` |
+| Image preparation and storage | `app/Services/AvatarStorage.php` |
+| Account views | `resources/views/customers/`, `resources/views/users/` |
+| Shared layout and errors | `resources/views/layouts/app.blade.php`, `resources/views/partials/form-errors.blade.php` |
+| Avatar migration | `database/migrations/2026_11_14_000000_add_avatar_to_users_table.php` |
+| Routes | `routes/web.php` |
+| Repeatable seed data | `database/seeders/PosAccountSeeder.php`, `DatabaseSeeder.php` |
+| Tests | `tests/Feature/AccountFormsTest.php`, `PosPagesTest.php`, `PosAccountSeederTest.php` |
 
-The users adaptation migration renames the default name/email fields to full_name/username, preserves the unique index, removes unused authentication fields, and adds role so the TFA5 Role column remains visible. These are staff listing records; this assignment does not implement login.
+All migrations and seeders are included as the database submission artifacts. A fresh seed creates five customers and five staff accounts. The screenshot walkthrough creates another customer and staff account through the forms. Local SQLite data, uploaded files, `.env`, `vendor/`, and browser tooling are excluded from Git.
 
-The account controllers retrieve Eloquent collections. Blade reads model properties and escapes their values. Empty tables show a clear message. Sample data lives only in the seeder. Repeating php artisan db:seed updates the five samples without duplicating them. Migrations and seeders are the database submission artifacts; a separate SQL export is not required by the document.
-
-| Page | Route |
-| --- | --- |
-| Home | / |
-| About | /about |
-| Customer Accounts | /customers |
-| User Accounts | /users |
-
-## Validation
+## Verification
 
 ```bat
-php artisan test
+php -d extension=gd vendor/phpunit/phpunit/phpunit
 php artisan route:list --except-vendor
 php artisan view:cache
 php artisan view:clear
 ```
 
-Tests use a separate in-memory SQLite database. They verify all four pages, navigation, seeded records, database inserts/updates/deletes appearing on the pages, escaped output, empty states, unique usernames, repeatable seeding, and migration rollback/reapply.
+Verified: **16 tests, 178 assertions**. Tests use an isolated in-memory SQLite database and fake public disk. They cover required fields, invalid email, old input, uniqueness conflicts, unchanged unique values on edit, missing records, thumbnail dimensions and format, avatar URLs, placeholders, replacement, retained avatars, invalid/oversized uploads without partial updates, existing pages, repeatable seed data and migration rollback/reapply.
 
-## Hosting and submission
+Browser verification submits the actual forms with CSRF protection, checks success messages and saved rows, rejects invalid and oversized uploads, verifies the served thumbnail is 256×256, checks every avatar loads, and checks the mobile edit form for horizontal overflow. See `scripts/capture_screenshots.py`; it needs Python, Playwright and Microsoft Edge. Generate its sample image with `php -d extension=gd scripts/create-demo-avatar.php`. The non-personal 900×600 PNG is included in `docs/fixtures/`.
 
-Repository: https://github.com/Phillip-Calugay/TFA6
+## References
 
-Hosted URL: pending deployment to a PHP/Laravel hosting account. The local address is not a public hosted submission link.
-
-Use a PHP 8.2+ host with PDO SQLite (or configure MySQL in the server .env). Point its document root to public/. Upload the project or deploy from Git, then run:
-
-```sh
-composer install --no-dev --optimize-autoloader
-cp .env.example .env
-php artisan key:generate
-php -r "file_exists('database/database.sqlite') || touch('database/database.sqlite');"
-```
-
-Set APP_ENV=production, APP_DEBUG=false, and APP_URL to the actual HTTPS address in the server .env. For SQLite ensure database/database.sqlite and the database directory are writable by PHP. Also permit writes to storage/ and bootstrap/cache/. Then run:
-
-```sh
-php artisan migrate --seed --force
-php artisan optimize
-```
-
-Keep .env, the local SQLite database, vendor/, and secrets out of Git. If using MySQL, create the database first and set DB_CONNECTION=mysql plus DB_HOST, DB_PORT, DB_DATABASE, DB_USERNAME, and DB_PASSWORD. Check /, /about, /customers, /users and the CSS on the public host, then submit both the repository and actual hosted URL.
+- [Laravel validation](https://laravel.com/docs/12.x/validation)
+- [Laravel file storage](https://laravel.com/docs/12.x/filesystem)
+- [Intervention Image installation](https://image.intervention.io/v3/getting-started/installation)
+- [Intervention Image resizing](https://image.intervention.io/v3/modifying-images/resizing)
