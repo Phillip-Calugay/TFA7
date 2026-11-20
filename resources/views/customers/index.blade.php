@@ -13,7 +13,7 @@
                         <td>{{ $customer->full_name }}</td>
                         <td>{{ $customer->email }}</td>
                         <td>{{ $customer->phone }}</td>
-                        <td><a href="{{ route('customers.edit', $customer) }}" aria-label="Edit {{ $customer->full_name }}">Edit</a></td>
+                        <td><a href="{{ route('customers.show', $customer) }}" aria-label="View {{ $customer->full_name }}">View</a> · <a href="{{ route('customers.edit', $customer) }}" aria-label="Edit {{ $customer->full_name }}">Edit</a></td>
                     </tr>
                 @empty
                     <tr><td colspan="4">No customers found.</td></tr>

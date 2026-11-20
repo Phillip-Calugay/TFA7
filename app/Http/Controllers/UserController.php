@@ -26,7 +26,7 @@ class UserController extends Controller
     {
         User::create($this->validated($request));
 
-        return to_route('users')->with('status', 'User created successfully.');
+        return to_route('users.index')->with('status', 'User created successfully.');
     }
 
     public function edit(User $user): View
@@ -55,7 +55,26 @@ class UserController extends Controller
             Storage::disk('public')->delete($oldAvatar);
         }
 
-        return to_route('users')->with('status', 'User updated successfully.');
+        return to_route('users.index')->with('status', 'User updated successfully.');
+    }
+
+    public function show(User $user): View
+    {
+        return view('users.show', ['title' => 'User details', 'user' => $user]);
+    }
+
+    public function destroy(Request $request, User $user): RedirectResponse
+    {
+        if ($request->user()->is($user)) {
+            return back()->withErrors(['user' => 'Use your profile page to delete your own account.']);
+        }
+        $avatar = $user->avatar;
+        $user->delete();
+        if ($avatar) {
+            Storage::disk('public')->delete($avatar);
+        }
+
+        return to_route('users.index')->with('status', 'User deleted successfully.');
     }
 
     private function validated(Request $request, ?User $user = null): array

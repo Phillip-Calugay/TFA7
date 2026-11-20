@@ -24,7 +24,7 @@ class CustomerController extends Controller
     {
         Customer::create($this->validated($request));
 
-        return to_route('customers')->with('status', 'Customer created successfully.');
+        return to_route('customers.index')->with('status', 'Customer created successfully.');
     }
 
     public function edit(Customer $customer): View
@@ -36,7 +36,19 @@ class CustomerController extends Controller
     {
         $customer->update($this->validated($request, $customer));
 
-        return to_route('customers')->with('status', 'Customer updated successfully.');
+        return to_route('customers.index')->with('status', 'Customer updated successfully.');
+    }
+
+    public function show(Customer $customer): View
+    {
+        return view('customers.show', ['title' => 'Customer details', 'customer' => $customer]);
+    }
+
+    public function destroy(Customer $customer): RedirectResponse
+    {
+        $customer->delete();
+
+        return to_route('customers.index')->with('status', 'Customer deleted successfully.');
     }
 
     private function validated(Request $request, ?Customer $customer = null): array

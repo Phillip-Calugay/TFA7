@@ -27,6 +27,6 @@
             <p class="help" id="avatar-help">JPEG, PNG or WebP, up to 2 MB and 6000 × 6000 pixels. Saved as a 256 × 256 thumbnail. Leave empty to keep the current picture.</p>
             @error('avatar') <p class="field-error" id="avatar-error">{{ $message }} Please select the file again.</p> @enderror
         @endif
-        <div class="actions"><button type="submit">{{ $user->exists ? 'Save changes' : 'Create user' }}</button><a href="{{ route('users') }}">Cancel</a></div>
+        <div class="actions"><button type="submit">{{ $user->exists ? 'Save changes' : 'Create user' }}</button><a href="{{ route('users.index') }}">Cancel</a></div>
     </form>
 @endsection

@@ -14,7 +14,7 @@
                         <td>{{ $user->username }}</td>
                         <td>{{ $user->full_name }}</td>
                         <td>{{ $user->role }}</td>
-                        <td><a href="{{ route('users.edit', $user) }}" aria-label="Edit {{ $user->full_name }}">Edit</a></td>
+                        <td><a href="{{ route('users.show', $user) }}" aria-label="View {{ $user->full_name }}">View</a> · <a href="{{ route('users.edit', $user) }}" aria-label="Edit {{ $user->full_name }}">Edit</a></td>
                     </tr>
                 @empty
                     <tr><td colspan="5">No users found.</td></tr>

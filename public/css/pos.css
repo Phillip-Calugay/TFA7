@@ -33,3 +33,12 @@ input:focus, select:focus, button:focus-visible { outline: 2px solid #245c80; ou
 .preview { width: 72px; height: 72px; margin: 10px 0; }
 @media (max-width: 940px) { main { margin: 24px 16px; } }
 @media (max-width: 480px) { header { padding: 16px; } nav { gap: 16px; } main { padding: 16px; } }
+
+nav { align-items: center; }
+nav .logout { margin: 0; }
+nav button { padding: 5px 10px; background: #456078; }
+input[type="checkbox"] { display: inline-block; width: auto; }
+form > div { margin-bottom: 16px; }
+form > a, form button { margin-top: 12px; }
+dt { font-weight: bold; margin-top: 16px; } dd { margin: 6px 0 20px; }
+.danger { background: #a32b26; }

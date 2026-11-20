@@ -16,6 +16,6 @@
         <label for="phone">Phone</label>
         <input id="phone" name="phone" type="tel" value="{{ old('phone', $customer->phone) }}" maxlength="30" autocomplete="tel" @error('phone') aria-invalid="true" aria-describedby="phone-error" @enderror>
         @error('phone') <p class="field-error" id="phone-error">{{ $message }}</p> @enderror
-        <div class="actions"><button type="submit">{{ $customer->exists ? 'Save changes' : 'Create customer' }}</button><a href="{{ route('customers') }}">Cancel</a></div>
+        <div class="actions"><button type="submit">{{ $customer->exists ? 'Save changes' : 'Create customer' }}</button><a href="{{ route('customers.index') }}">Cancel</a></div>
     </form>
 @endsection

@@ -12,12 +12,18 @@ class PosPagesTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->actingAs(User::factory()->make(['id' => 999999]));
+    }
+
     public function test_four_pages_and_navigation_work(): void
     {
         $this->seed(DatabaseSeeder::class);
         foreach (['/' => 'Welcome', '/about' => 'About', '/customers' => 'Customer Accounts', '/users' => 'User Accounts'] as $path => $heading) {
             $response = $this->get($path)->assertOk()->assertSeeText($heading);
-            foreach (['home', 'about', 'customers', 'users'] as $route) {
+            foreach (['home', 'about', 'customers.index', 'users.index'] as $route) {
                 $response->assertSee('href="'.route($route).'"', false);
             }
             $response->assertSee('aria-current="page"', false);

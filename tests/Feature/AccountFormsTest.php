@@ -13,6 +13,12 @@ class AccountFormsTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->actingAs(User::factory()->make(['id' => 999999]));
+    }
+
     public function test_customer_validation_preserves_input_and_valid_customer_can_be_created(): void
     {
         $this->get('/customers/create')->assertOk();
